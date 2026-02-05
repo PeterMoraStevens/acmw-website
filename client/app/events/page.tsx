@@ -1,9 +1,9 @@
-import React from 'react'
+"use client";
+import Grainient from "@/components/Grainient";
+import React from "react";
 
 const Page = () => {
-  return (
-    <div>Page</div>
-  )
-}
+  return <div>page</div>;
+};
 
-export default Page
+export default Page;

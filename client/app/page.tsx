@@ -6,7 +6,7 @@ import { Highlighter } from "@/components/ui/highlighter";
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-background bg-[linear-gradient(to_right,#80808033_1px,transparent_1px),linear-gradient(to_bottom,#80808033_1px,transparent_1px)] bg-size-[70px_70px] prose-h4:xl:text-2xl prose-h4:lg:text-xl prose-h4:text-lg">
+    <div className="min-h-screen bg-size-[70px_70px] prose-h4:xl:text-2xl prose-h4:lg:text-xl prose-h4:text-lg">
       <div className="flex flex-col  items-center min-h-screen">
         <div className="sm:max-w-[50%] text-center m-4 my-36 bg-secondary-background p-4 rounded-2xl shadow-shadow border-border border-2">
           <Star9 className="w-12 h-12 text-main" />
