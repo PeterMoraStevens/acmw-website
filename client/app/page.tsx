@@ -1,12 +1,15 @@
+"use client";
+
 import Star22 from "@/components/stars/s22";
 import Star9 from "@/components/stars/s9";
 import Marquee from "@/components/ui/marquee";
 import React from "react";
 import { Highlighter } from "@/components/ui/highlighter";
+import MagicBento from "@/components/MagicBento";
 
 const Page = () => {
   return (
-    <div className="min-h-screen bg-size-[70px_70px] prose-h4:xl:text-2xl prose-h4:lg:text-xl prose-h4:text-lg">
+    <div className="min-h-screen bg-size-[70px_70px] prose-h4:xl:text-2xl prose-h4:lg:text-xl prose-h4:text-lg mt-20">
       <div className="flex flex-col  items-center min-h-screen">
         <div className="sm:max-w-[50%] text-center m-4 my-36 bg-secondary-background p-4 rounded-2xl shadow-shadow border-border border-2">
           <Star9 className="w-12 h-12 text-main" />
@@ -35,6 +38,23 @@ const Page = () => {
             "Networking and Professional Events",
           ]}
         />
+
+        <div className="w-full">
+          <h2>
+            Supporting Underrepresented
+          </h2>
+        </div>
+
+        {/* <MagicBento
+          textAutoHide={true}
+          enableTilt={false}
+          enableMagnetism={false}
+          clickEffect
+          spotlightRadius={400}
+          particleCount={12}
+          glowColor="66, 135, 245"
+          disableAnimations={false}
+        /> */}
       </div>
     </div>
   );

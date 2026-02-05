@@ -17,7 +17,7 @@ const DesktopNavbar = () => {
   const url = usePathname();
 
   return (
-    <div className="z-48 flex p-4 gap-4 sticky top-0 bg-background border-border border-b-2">
+    <div className="z-48 gap-4 fixed left-0 top-0 mx-auto flex h-17.5 w-full items-center border-b-4 border-border bg-background px-5">
       <Link href={"/"}>
         <Button
           className={url === "/" ? "ml-2 bg-secondary-background" : "ml-2"}
@@ -58,7 +58,7 @@ const MobileNavbar = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="z-49 flex p-4 gap-4 sticky top-0 bg-background border-border border-b-2">
+    <div className="z-49 left-0 top-0 mx-auto flex h-17.5 w-full items-center border-b-4 border-border bg-secondary-background px-5">
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
           <Button size={"icon"}>
@@ -66,12 +66,12 @@ const MobileNavbar = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="z-49 bg-secondary-background">
-          <DropdownMenuItem
-            className="bg-secondary-background"
-            onClick={() => setOpen((prev) => !prev)}
-          >
+          <DropdownMenuItem className="bg-secondary-background">
             <Link href={"/"}>
-              <Button className={url === "/" ? "bg-secondary-background" : ""}>
+              <Button
+                className={url === "/" ? "bg-secondary-background" : ""}
+                onClick={() => setOpen((prev) => !prev)}
+              >
                 Home
               </Button>
             </Link>

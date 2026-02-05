@@ -22,9 +22,15 @@ import React from "react";
 const Page = () => {
   type officer = {
     name: string;
+    major?: string;
+    minor?: string;
+    internship?: string;
+    hobbies?: string;
     img: string;
     role: string;
     bio: string;
+    email?: string;
+    linkedin?: string;
   };
 
   const officers: officer[] = [
@@ -91,7 +97,7 @@ const Page = () => {
   ];
 
   return (
-    <div className="flex flex-wrap justify-center gap-6 p-6">
+    <div className="flex flex-wrap justify-center gap-6 p-6 mt-18">
       {officers.map((officer) => (
         <Dialog key={officer.name}>
           <DialogTrigger asChild>
@@ -106,7 +112,7 @@ const Page = () => {
                   alt={`Image of ${officer.name}`}
                   className="w-32 h-32 rounded-full border shadow-md object-cover"
                 />
-                <p>{officer.role}</p>
+                {officer.role}
               </CardContent>
             </Card>
           </DialogTrigger>
