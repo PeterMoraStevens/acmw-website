@@ -9,15 +9,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Menu } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
+import { Menu, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 const DesktopNavbar = () => {
   const url = usePathname();
 
   return (
-    <div className="z-48 gap-4 fixed left-0 top-0 mx-auto flex h-17.5 w-full items-center border-b-4 border-border bg-background px-5">
+    <div className="z-50 gap-4 fixed left-0 top-0 mx-auto flex h-17.5 w-full items-center border-b-4 border-border bg-background px-5">
       <Link href={"/"}>
         <Button
           className={url === "/" ? "ml-2 bg-secondary-background" : "ml-2"}
@@ -25,30 +25,43 @@ const DesktopNavbar = () => {
           Home
         </Button>
       </Link>
-      <Link href={"/events/"}>
-        <Button className={url === "/events" ? "bg-secondary-background" : ""}>
-          Events
+      <Link href={"/admin/events/"}>
+        <Button
+          className={url === "/admin/events" ? "bg-secondary-background" : ""}
+        >
+          Manage Events
         </Button>
       </Link>
-      <Link href={"/officers/"}>
+      <Link href={"/admin/officers/"}>
         <Button
-          className={url === "/officers" ? "bg-secondary-background" : ""}
+          className={url === "/admin/officers" ? "bg-secondary-background" : ""}
         >
           Officers
         </Button>
       </Link>
-      <Link href={"/resources/"}>
+      <Link href={"/admin/resources/"}>
         <Button
-          className={url === "/resources" ? "bg-secondary-background" : ""}
+          className={
+            url === "/admin/resources" ? "bg-secondary-background" : ""
+          }
         >
           Resources
         </Button>
       </Link>
-      <Link href={"/sponsor/"}>
-        <Button className={url === "/sponsor" ? "bg-secondary-background" : ""}>
+      <Link href={"/admin/sponsor/"}>
+        <Button
+          className={url === "/admin/sponsor" ? "bg-secondary-background" : ""}
+        >
           Sponsor
         </Button>
       </Link>
+      <Button
+        className="ml-auto mr-2"
+        onClick={() => signOut({ callbackUrl: "/" })}
+      >
+        <LogOut className="h-4 w-4 mr-1" />
+        Sign Out
+      </Button>
     </div>
   );
 };
@@ -77,7 +90,7 @@ const MobileNavbar = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="bg-secondary-background">
-            <Link href={"/events/"}>
+            <Link href={"/admin/events/"}>
               <Button
                 className={url === "/events" ? "bg-secondary-background" : ""}
                 onClick={() => setOpen((prev) => !prev)}
@@ -87,9 +100,11 @@ const MobileNavbar = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="bg-secondary-background">
-            <Link href={"/officers/"}>
+            <Link href={"/admin/officers/"}>
               <Button
-                className={url === "/officers" ? "bg-secondary-background" : ""}
+                className={
+                  url === "/admin/officers" ? "bg-secondary-background" : ""
+                }
                 onClick={() => setOpen((prev) => !prev)}
               >
                 Officers
@@ -100,7 +115,7 @@ const MobileNavbar = () => {
             <Link href={"/resources/"}>
               <Button
                 className={
-                  url === "/resources" ? "bg-secondary-background" : ""
+                  url === "/admin/resources" ? "bg-secondary-background" : ""
                 }
                 onClick={() => setOpen((prev) => !prev)}
               >
@@ -111,12 +126,20 @@ const MobileNavbar = () => {
           <DropdownMenuItem className="bg-secondary-background">
             <Link href={"/sponsor/"}>
               <Button
-                className={url === "/sponsor" ? "bg-secondary-background" : ""}
+                className={
+                  url === "/admin/sponsor" ? "bg-secondary-background" : ""
+                }
                 onClick={() => setOpen((prev) => !prev)}
               >
                 Sponsor
               </Button>
             </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="bg-secondary-background">
+            <Button onClick={() => signOut({ callbackUrl: "/" })}>
+              <LogOut className="h-4 w-4 mr-1" />
+              Sign Out
+            </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -124,9 +147,8 @@ const MobileNavbar = () => {
   );
 };
 
-const Navbar = () => {
+const AdminNavbar = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const url = usePathname();
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 600);
@@ -135,9 +157,7 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  if (url.includes("admin")) return;
-
   return isMobile ? <MobileNavbar /> : <DesktopNavbar />;
 };
 
-export default Navbar;
+export default AdminNavbar;

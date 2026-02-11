@@ -1,105 +1,77 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { DialogHeader, DialogFooter } from "@/components/ui/dialog";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { db } from "@/lib/firebase";
+
+import { collection, getDocs } from "firebase/firestore";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import {
   Dialog,
   DialogTrigger,
   DialogContent,
+  DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogClose,
 } from "@/components/ui/dialog";
-import React from "react";
+
+type Officer = {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  img: string;
+  major?: string;
+  minor?: string;
+  hobbies?: string;
+  responsibilities?: string;
+  linkedin?: string;
+  email?: string;
+  websiteUrl?: string;
+  socialUrl?: string;
+  order?: number;
+};
 
 const Page = () => {
-  type officer = {
-    name: string;
-    major?: string;
-    minor?: string;
-    internship?: string;
-    hobbies?: string;
-    img: string;
-    role: string;
-    bio: string;
-    email?: string;
-    linkedin?: string;
-  };
+  const [officers, setOfficers] = useState<Officer[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const officers: officer[] = [
-    {
-      name: "Heidi",
-      img: "idk",
-      role: "President",
-      bio: "Heidi started at OSU...",
-    },
-    {
-      name: "Jamie",
-      img: "idk",
-      role: "Vice-President",
-      bio: "Jamie started at OSU...",
-    },
-    {
-      name: "Lauren",
-      img: "idk",
-      role: "Secretary",
-      bio: "Lauren started at OSU...",
-    },
-    {
-      name: "Carlana",
-      img: "idk",
-      role: "Treasurer",
-      bio: "Carlana started at OSU...",
-    },
-    {
-      name: "Sandra",
-      img: "idk",
-      role: "Funding Cordinator",
-      bio: "Sandra started at OSU...",
-    },
-    {
-      name: "Rithika",
-      img: "idk",
-      role: "Co-Event Cordinator",
-      bio: "Rithika started at OSU...",
-    },
-    {
-      name: "Grace",
-      img: "idk",
-      role: "Co-Event Cordinator",
-      bio: "Grace started at OSU...",
-    },
-    {
-      name: "Mack",
-      img: "idk",
-      role: "Hackathon Cordinator",
-      bio: "Mack started at OSU...",
-    },
-    {
-      name: "Tiffany",
-      img: "idk",
-      role: "Public Relations",
-      bio: "Tiffany started at OSU...",
-    },
-    {
-      name: "Whitney",
-      img: "idk",
-      role: "Historian",
-      bio: "Whitney started at OSU...",
-    },
-  ];
+  useEffect(() => {
+    async function fetchOfficers() {
+      try {
+        const snapshot = await getDocs(collection(db, "officers"));
+
+        const officerData: Officer[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Officer, "id">),
+        }));
+
+        officerData.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+        setOfficers(officerData);
+      } catch (error) {
+        console.error("Error fetching officers:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchOfficers();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center p-10 text-lg">
+        Loading officers...
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-wrap justify-center gap-6 p-6 mt-18">
       {officers.map((officer) => (
-        <Dialog key={officer.name}>
+        <Dialog key={officer.id}>
           <DialogTrigger asChild>
             <Card className="w-full max-w-sm hover:cursor-pointer text-center">
               <CardHeader>
@@ -112,27 +84,112 @@ const Page = () => {
                   alt={`Image of ${officer.name}`}
                   className="w-32 h-32 rounded-full border shadow-md object-cover"
                 />
-                {officer.role}
+                <p className="font-semibold">{officer.role}</p>
               </CardContent>
             </Card>
           </DialogTrigger>
 
-          <DialogContent className="flex flex-col items-center text-center sm:max-w-lg">
+          <DialogContent className="sm:max-w-md">
             <DialogHeader className="items-center text-center">
-              <DialogTitle className="text-3xl">{officer.name}</DialogTitle>
-
-              <DialogDescription className="flex flex-col items-center gap-4">
-                <img
-                  src={officer.img}
-                  alt={`Image of ${officer.name}`}
-                  className="w-32 h-32 rounded-full border shadow-md object-cover"
-                />
-
-                <p className="font-semibold">{officer.role}</p>
-
-                <p className="text-muted-foreground">{officer.bio}</p>
-              </DialogDescription>
+              <img
+                src={officer.img}
+                alt={`Image of ${officer.name}`}
+                className="w-36 h-36 rounded-full border-2 shadow-lg object-cover"
+              />
+              <DialogTitle className="text-2xl pt-2">
+                {officer.name}
+              </DialogTitle>
+              <p className="text-sm font-semibold text-purple-600">
+                {officer.role}
+              </p>
             </DialogHeader>
+
+            <DialogDescription asChild>
+              <div className="flex flex-col gap-4 pt-2">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {officer.bio}
+                </p>
+
+                {(officer.major || officer.minor) && (
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                    {officer.major && (
+                      <div>
+                        <span className="font-semibold">Major</span>
+                        <p className="text-muted-foreground">{officer.major}</p>
+                      </div>
+                    )}
+                    {officer.minor && (
+                      <div>
+                        <span className="font-semibold">Minor</span>
+                        <p className="text-muted-foreground">{officer.minor}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {officer.responsibilities && (
+                  <div className="text-sm">
+                    <span className="font-semibold">Responsibilities</span>
+                    <p className="text-muted-foreground">
+                      {officer.responsibilities}
+                    </p>
+                  </div>
+                )}
+
+                {officer.hobbies && (
+                  <div className="text-sm">
+                    <span className="font-semibold">Hobbies</span>
+                    <p className="text-muted-foreground">{officer.hobbies}</p>
+                  </div>
+                )}
+
+                {(officer.linkedin ||
+                  officer.email ||
+                  officer.websiteUrl ||
+                  officer.socialUrl) && (
+                  <div className="flex flex-wrap justify-center gap-2 pt-1 border-t">
+                    {officer.linkedin && (
+                      <a
+                        href={officer.linkedin}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-muted transition-colors"
+                      >
+                        LinkedIn
+                      </a>
+                    )}
+                    {officer.email && (
+                      <a
+                        href={`mailto:${officer.email}`}
+                        className="mt-2 rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-muted transition-colors"
+                      >
+                        Email
+                      </a>
+                    )}
+                    {officer.websiteUrl && (
+                      <a
+                        href={officer.websiteUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-muted transition-colors"
+                      >
+                        Website
+                      </a>
+                    )}
+                    {officer.socialUrl && (
+                      <a
+                        href={officer.socialUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-muted transition-colors"
+                      >
+                        Socials
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            </DialogDescription>
           </DialogContent>
         </Dialog>
       ))}

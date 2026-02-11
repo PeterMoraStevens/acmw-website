@@ -20,8 +20,8 @@ const Page = () => {
               strokeWidth={3}
               iterations={3}
             >
-              ACMW
-            </Highlighter>
+              ACM-W
+            </Highlighter>{" "}
             @ OSU
           </h1>
           <p className="text-2xl">
@@ -40,9 +40,7 @@ const Page = () => {
         />
 
         <div className="w-full">
-          <h2>
-            Supporting Underrepresented
-          </h2>
+          <h2>Supporting Underrepresented</h2>
         </div>
 
         {/* <MagicBento
