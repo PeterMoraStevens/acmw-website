@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Menu } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
 import { usePathname } from "next/navigation";
 
 const DesktopNavbar = () => {
