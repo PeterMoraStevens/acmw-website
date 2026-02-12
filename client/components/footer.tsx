@@ -7,8 +7,7 @@ import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const url = usePathname();
-  const manageUrl = url.split("/");
-  const pageUrl = manageUrl.pop();
+  const pageUrl = url.split("/").pop() || "events";
 
   return (
     <div className="flex justify-between w-full h-16 border-t-border border-t-2 p-4 bg-background">

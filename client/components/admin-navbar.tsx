@@ -55,6 +55,13 @@ const DesktopNavbar = () => {
           Manage Sponsor
         </Button>
       </Link>
+      <Link href={"/admin/emails/"}>
+        <Button
+          className={url === "/admin/emails" ? "bg-secondary-background" : ""}
+        >
+          Manage Emails
+        </Button>
+      </Link>
       <Button
         className="ml-auto mr-2"
         onClick={() => signOut({ callbackUrl: "/" })}
@@ -132,6 +139,18 @@ const MobileNavbar = () => {
                 onClick={() => setOpen((prev) => !prev)}
               >
                 Sponsor
+              </Button>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="bg-secondary-background">
+            <Link href={"/admin/emails/"}>
+              <Button
+                className={
+                  url === "/admin/emails" ? "bg-secondary-background" : ""
+                }
+                onClick={() => setOpen((prev) => !prev)}
+              >
+                Emails
               </Button>
             </Link>
           </DropdownMenuItem>

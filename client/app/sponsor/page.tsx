@@ -1,9 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState, useRef } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -27,6 +28,7 @@ import {
   BookOpen,
   Megaphone,
   Mail,
+  ExternalLink,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,6 +40,14 @@ type ResumeInfo = {
   storagePath: string;
 };
 
+type Sponsor = {
+  id: string;
+  name: string;
+  logo: string;
+  website?: string;
+  order?: number;
+};
+
 const Page = () => {
   const { data: session, status } = useSession();
   const [resumeInfo, setResumeInfo] = useState<ResumeInfo | null>(null);
@@ -45,10 +55,28 @@ const Page = () => {
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
 
   const rawEmail = session?.user?.email ?? "";
   const userEmail = rawEmail.trim().toLowerCase();
   const isOsuEmail = userEmail.endsWith("@oregonstate.edu");
+
+  useEffect(() => {
+    async function fetchSponsors() {
+      try {
+        const snapshot = await getDocs(collection(db, "sponsors"));
+        const data: Sponsor[] = snapshot.docs.map((d) => ({
+          id: d.id,
+          ...(d.data() as Omit<Sponsor, "id">),
+        }));
+        data.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+        setSponsors(data);
+      } catch (err) {
+        console.error("Error fetching sponsors:", err);
+      }
+    }
+    fetchSponsors();
+  }, []);
 
   useEffect(() => {
     if (status !== "authenticated" || !isOsuEmail) return;
@@ -210,6 +238,37 @@ const Page = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Our Sponsors */}
+      {sponsors.length > 0 && (
+        <div className="mb-10">
+          <h2 className="text-2xl font-bold mb-4">Our Sponsors</h2>
+          <div className="flex flex-wrap gap-6 items-center justify-center">
+            {sponsors.map((sponsor) => (
+              <a
+                key={sponsor.id}
+                href={sponsor.website || undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 p-4 border rounded-lg hover:shadow-md transition-shadow"
+              >
+                <img
+                  src={sponsor.logo}
+                  alt={`${sponsor.name} logo`}
+                  className="w-36 h-20 object-contain"
+                />
+                <span className="text-sm font-medium">{sponsor.name}</span>
+                {sponsor.website && (
+                  <span className="text-xs text-blue-500 flex items-center gap-1">
+                    <ExternalLink className="w-3 h-3" />
+                    Visit
+                  </span>
+                )}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Resume Upload Section */}
 
