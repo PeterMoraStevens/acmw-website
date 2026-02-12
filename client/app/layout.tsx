@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ACMW @ OSU",
+  title: "ACM-W @ OSU",
   description:
     "ACMW @ OSU is dedicate to fostering diversity in tech and supporting all in underrepresented groups",
 };

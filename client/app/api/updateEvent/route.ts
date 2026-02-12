@@ -30,6 +30,7 @@ export async function PUT(request: Request) {
     const title = String(form.get("title") ?? "");
     const description = String(form.get("description") ?? "");
     const date = String(form.get("date") ?? "");
+    const location = String(form.get("location") ?? "");
 
     if (!title || !description || !date) {
       return NextResponse.json(
@@ -126,6 +127,7 @@ export async function PUT(request: Request) {
       title,
       description,
       date,
+      location,
       images: allImages,
       updatedAt: FieldValue.serverTimestamp(),
     });

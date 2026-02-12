@@ -37,6 +37,7 @@ type EventPost = {
   title: string;
   description: string;
   date: string;
+  location: string;
   images: EventImage[];
   archived: boolean;
 };
@@ -91,9 +92,7 @@ const Page = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center p-10 text-lg">
-        Loading events...
-      </div>
+      <div className="flex justify-center p-10 text-lg">Loading events...</div>
     );
   }
 
@@ -115,14 +114,21 @@ const Page = () => {
         onOpenChange={(open) => !open && setSelectedEvent(null)}
       >
         {selectedEvent && (
-          <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="w-[95vw] max-w-5xl h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl">
                 {selectedEvent.title}
               </DialogTitle>
-              <p className="text-sm text-muted-foreground">
-                {formatDate(selectedEvent.date)}
-              </p>
+              <div className="flex flex-col gap-0.5">
+                <p className="text-sm text-muted-foreground">
+                  {formatDate(selectedEvent.date)}
+                </p>
+                {selectedEvent.location && (
+                  <p className="text-sm text-muted-foreground">
+                    {selectedEvent.location}
+                  </p>
+                )}
+              </div>
             </DialogHeader>
 
             <DialogDescription asChild>
@@ -132,14 +138,14 @@ const Page = () => {
                     <CarouselContent>
                       {selectedEvent.images.map((img, i) => (
                         <CarouselItem key={img.path}>
-                          <div className="bg-black/5 rounded-md overflow-hidden">
+                          <div className="aspect-4/5 bg-black/5 rounded-md overflow-hidden flex items-center justify-center">
                             <Image
                               src={img.url}
                               alt={`${selectedEvent.title} photo ${i + 1}`}
                               width={800}
-                              height={600}
-                              className="w-full h-auto object-contain"
-                              sizes="(max-width: 768px) 100vw, 672px"
+                              height={1000}
+                              className="max-w-full max-h-full object-contain"
+                              sizes="(max-width: 768px) 90vw, 800px"
                             />
                           </div>
                         </CarouselItem>
@@ -149,14 +155,14 @@ const Page = () => {
                     <CarouselNext className="right-0" />
                   </Carousel>
                 ) : selectedEvent.images.length === 1 ? (
-                  <div className="bg-black/5 rounded-md overflow-hidden">
+                  <div className="aspect-4/5 bg-black/5 rounded-md overflow-hidden flex items-center justify-center">
                     <Image
                       src={selectedEvent.images[0].url}
                       alt={selectedEvent.title}
                       width={800}
-                      height={600}
-                      className="w-full h-auto object-contain"
-                      sizes="(max-width: 768px) 100vw, 672px"
+                      height={1000}
+                      className="max-w-full max-h-full object-contain"
+                      sizes="(max-width: 768px) 90vw, 800px"
                     />
                   </div>
                 ) : null}
@@ -185,28 +191,31 @@ const Page = () => {
                 {yearEvents.map((event) => (
                   <Card
                     key={event.id}
-                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    className="cursor-pointer hover:shadow-lg transition-shadow pt-0!"
                     onClick={() => setSelectedEvent(event)}
                   >
                     {event.images.length > 0 && (
-                      <div className="bg-black/5 rounded-t-md overflow-hidden">
+                      <div className="aspect-4/5 bg-black/5 rounded-t-md overflow-hidden flex items-center justify-center">
                         <Image
                           src={event.images[0].url}
                           alt={event.title}
                           width={400}
-                          height={300}
-                          className="w-full h-auto object-contain"
+                          height={500}
+                          className="max-w-full max-h-full object-contain"
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         />
                       </div>
                     )}
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-base">
-                        {event.title}
-                      </CardTitle>
+                      <CardTitle className="text-base">{event.title}</CardTitle>
                       <p className="text-xs text-muted-foreground">
                         {formatDate(event.date)}
                       </p>
+                      {event.location && (
+                        <p className="text-xs text-muted-foreground">
+                          {event.location}
+                        </p>
+                      )}
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-muted-foreground line-clamp-2">

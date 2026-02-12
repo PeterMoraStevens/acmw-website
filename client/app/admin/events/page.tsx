@@ -71,6 +71,7 @@ type EventPost = {
   title: string;
   description: string;
   date: string;
+  location: string;
   images: EventImage[];
   archived: boolean;
 };
@@ -79,12 +80,14 @@ type EventFormFields = {
   title: string;
   description: string;
   date: string;
+  location: string;
 };
 
 const emptyFormFields: EventFormFields = {
   title: "",
   description: "",
   date: "",
+  location: "",
 };
 
 // --- Sortable Image Thumbnail ---
@@ -380,6 +383,7 @@ const Page = () => {
     fd.append("title", createForm.title);
     fd.append("description", createForm.description);
     fd.append("date", createForm.date);
+    fd.append("location", createForm.location);
 
     createImageBlobs.forEach((blob, i) => {
       fd.append("images", blob, `event-image-${i}.jpg`);
@@ -432,6 +436,7 @@ const Page = () => {
       title: event.title,
       description: event.description,
       date: event.date,
+      location: event.location ?? "",
     });
     setEditKeptImages([...event.images]);
     setEditNewBlobs([]);
@@ -524,6 +529,7 @@ const Page = () => {
     fd.append("title", editForm.title);
     fd.append("description", editForm.description);
     fd.append("date", editForm.date);
+    fd.append("location", editForm.location);
     fd.append("existingImages", JSON.stringify(editKeptImages));
 
     editNewBlobs.forEach((blob, i) => {
@@ -675,6 +681,16 @@ const Page = () => {
               </div>
 
               <div className="grid gap-3">
+                <Label htmlFor="location">Location</Label>
+                <Input
+                  id="location"
+                  placeholder="e.g. Student Union Room 301"
+                  value={createForm.location}
+                  onChange={handleCreateTextChange("location")}
+                />
+              </div>
+
+              <div className="grid gap-3">
                 <Label htmlFor="images">
                   Images* ({createImageBlobs.length}/{MAX_IMAGES}, max 5 MB
                   each) — drag to reorder
@@ -775,6 +791,16 @@ const Page = () => {
                   required
                   value={editForm.date}
                   onChange={handleEditTextChange("date")}
+                />
+              </div>
+
+              <div className="grid gap-3">
+                <Label htmlFor="edit-location">Location</Label>
+                <Input
+                  id="edit-location"
+                  placeholder="e.g. Student Union Room 301"
+                  value={editForm.location}
+                  onChange={handleEditTextChange("location")}
                 />
               </div>
 

@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import Image from "next/image";
 
 type Officer = {
   id: string;
@@ -48,7 +49,9 @@ const Page = () => {
           ...(doc.data() as Omit<Officer, "id">),
         }));
 
-        officerData.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+        officerData.sort(
+          (a, b) => (a.order ?? Infinity) - (b.order ?? Infinity),
+        );
         setOfficers(officerData);
       } catch (error) {
         console.error("Error fetching officers:", error);
@@ -79,10 +82,12 @@ const Page = () => {
               </CardHeader>
 
               <CardContent className="flex flex-col items-center gap-2">
-                <img
+                <Image
+                  height={192}
+                  width={192}
                   src={officer.img}
                   alt={`Image of ${officer.name}`}
-                  className="w-32 h-32 rounded-full border shadow-md object-cover"
+                  className="w-48 h-48 rounded-full border-2 border-border shadow-md object-cover"
                 />
                 <p className="font-semibold">{officer.role}</p>
               </CardContent>
@@ -91,10 +96,12 @@ const Page = () => {
 
           <DialogContent className="sm:max-w-md">
             <DialogHeader className="items-center text-center">
-              <img
+              <Image
+                height={240}
+                width={240}
                 src={officer.img}
                 alt={`Image of ${officer.name}`}
-                className="w-36 h-36 rounded-full border-2 shadow-lg object-cover"
+                className="rounded-full shadow-lg object-cover border-2 border-border"
               />
               <DialogTitle className="text-2xl pt-2">
                 {officer.name}

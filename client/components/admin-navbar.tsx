@@ -36,7 +36,7 @@ const DesktopNavbar = () => {
         <Button
           className={url === "/admin/officers" ? "bg-secondary-background" : ""}
         >
-          Officers
+          Manage Officers
         </Button>
       </Link>
       <Link href={"/admin/resources/"}>
@@ -45,14 +45,14 @@ const DesktopNavbar = () => {
             url === "/admin/resources" ? "bg-secondary-background" : ""
           }
         >
-          Resources
+          Manage Resources
         </Button>
       </Link>
       <Link href={"/admin/sponsor/"}>
         <Button
           className={url === "/admin/sponsor" ? "bg-secondary-background" : ""}
         >
-          Sponsor
+          Manage Sponsor
         </Button>
       </Link>
       <Button
